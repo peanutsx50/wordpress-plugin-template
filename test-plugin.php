@@ -31,7 +31,7 @@
 
 // Exit if accessed directly
 if (! defined('ABSPATH')) {
-    exit; 
+    exit;
 }
 
 // Autoload dependencies using Composer
@@ -39,48 +39,51 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
+// Define plugin constants
+define('PLUGIN_URL', plugin_dir_url(__FILE__));
+define('PLUGIN_PATH', plugin_dir_path(__FILE__));
+
 // namespace Inc;
-use Inc\Test_Plugin_Activator;
-use Inc\Test_Plugin_Deactivator;
-use Inc\Test_Plugin_Post_Types;
-use Inc\Test_Plugin_Admin_Pages;
+use Inc\base\Test_Plugin_Activator;
+use Inc\base\Test_Plugin_Deactivator;
+use Inc\base\Test_Plugin;
 
-class Test_Plugin
+
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-plugin-name-activator.php
+ */
+function activate_test_plugin()
 {
-    // Constructor to set up hooks
-    public function __construct()
-    {
-        // enqueue hooks: admin and public, loads CSS and js files
-        add_action('init', [Test_Plugin_Post_Types::class, 'register_custom_post_type']);
-        add_action('admin_menu', [Test_Plugin_Admin_Pages::class, 'add_admin_pages']);
-        add_action('admin_enqueue_scripts', [$this, 'test_plugin_enqueue_admin']);
-        add_action('wp_enqueue_scripts', [$this, 'test_plugin_enqueue_public']);
-    }
-
-    // Enqueue admin styles
-    public function test_plugin_enqueue_admin()
-    {
-        wp_enqueue_style(
-            'test-plugin-admin-style',
-            plugin_dir_url(__FILE__) . 'admin/test-plugin-admin.css'
-        );
-    }
-
-    // Enqueue public styles
-    public function test_plugin_enqueue_public()
-    {
-        wp_enqueue_style(
-            'test-plugin-public-style',
-            plugin_dir_url(__FILE__) . 'public/test-plugin-public.css'
-        );
-    }
+    Test_Plugin_Activator::activate();
 }
 
-if (class_exists('Test_Plugin')) {
-    $test_plugin_instance = new Test_Plugin();
-    
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-plugin-name-deactivator.php
+ */
+function deactivate_test_plugin()
+{
+    Test_Plugin_Deactivator::deactivate();
 }
 
 // Register activation and deactivation hooks
-register_activation_hook(__FILE__, [Test_Plugin_Activator::class, 'activate']);
-register_deactivation_hook(__FILE__, [Test_Plugin_Deactivator::class, 'deactivate']); 
+register_activation_hook(__FILE__, 'activate_test_plugin');
+register_deactivation_hook(__FILE__, 'deactivate_test_plugin');
+
+/**
+ * Begins execution of the plugin.
+ *
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
+ * not affect the page life cycle.
+ *
+ * @since    1.0.0
+ */
+function run_test_plugin()
+{
+    $plugin = new Test_Plugin();
+    return $plugin;
+}
+
+run_test_plugin();

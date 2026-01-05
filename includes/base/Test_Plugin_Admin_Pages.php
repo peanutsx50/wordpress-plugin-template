@@ -10,7 +10,7 @@
  * @subpackage Test_Plugin/includes
  */
 
-namespace Inc;
+namespace Inc\base;
 
 class Test_Plugin_Admin_Pages{
     public static function add_admin_pages(){
