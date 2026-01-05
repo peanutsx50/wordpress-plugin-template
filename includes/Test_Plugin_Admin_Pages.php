@@ -10,6 +10,8 @@
  * @subpackage Test_Plugin/includes
  */
 
+namespace Inc;
+
 class Test_Plugin_Admin_Pages{
     public static function add_admin_pages(){
         add_menu_page('Test Plugin', 'Test Plugin', 'manage_options', 'test_plugin', [self::class, 'admin_index'], 'dashicons-admin-generic', 110);

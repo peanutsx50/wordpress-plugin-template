@@ -1,0 +1,19 @@
+{
+    "name": "peanuts/test-plugin",
+    "description": "Awesome starter plugin",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Inc\\": "./includes"
+        }
+    },
+    "authors": [
+        {
+            "name": "peanutsx50",
+            "email": "murimifestus09@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

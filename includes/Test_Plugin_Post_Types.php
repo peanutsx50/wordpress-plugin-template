@@ -10,6 +10,8 @@
  * @subpackage Test_Plugin/includes
  */
 
+namespace Inc;
+
 class Test_Plugin_Post_Types
 {
     public static function register_custom_post_type()

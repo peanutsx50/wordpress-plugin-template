@@ -29,17 +29,21 @@
  * Domain Path:       /languages
  */
 
+// Exit if accessed directly
 if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+    exit; 
 }
 
-if (!function_exists('add_action')) {
-    echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-    exit;
+// Autoload dependencies using Composer
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
 }
 
-require_once plugin_dir_path(__FILE__) . 'includes/class-test-plugin-post-types.php';
-require_once plugin_dir_path(__FILE__) . 'includes/class-test-plugin-admin-pages.php';
+// namespace Inc;
+use Inc\Test_Plugin_Activator;
+use Inc\Test_Plugin_Deactivator;
+use Inc\Test_Plugin_Post_Types;
+use Inc\Test_Plugin_Admin_Pages;
 
 class Test_Plugin
 {
@@ -47,8 +51,8 @@ class Test_Plugin
     public function __construct()
     {
         // enqueue hooks: admin and public, loads CSS and js files
-        add_action('init', ['Test_Plugin_Post_Types', 'register_custom_post_type']);
-        add_action('admin_menu', ['Test_Plugin_Admin_Pages', 'add_admin_pages']);
+        add_action('init', [Test_Plugin_Post_Types::class, 'register_custom_post_type']);
+        add_action('admin_menu', [Test_Plugin_Admin_Pages::class, 'add_admin_pages']);
         add_action('admin_enqueue_scripts', [$this, 'test_plugin_enqueue_admin']);
         add_action('wp_enqueue_scripts', [$this, 'test_plugin_enqueue_public']);
     }
@@ -77,10 +81,6 @@ if (class_exists('Test_Plugin')) {
     
 }
 
-// Include the activation and deactivation classes
-require_once plugin_dir_path(__FILE__) . 'includes/class-test-plugin-activator.php';
-require_once plugin_dir_path(__FILE__) . 'includes/class-test-plugin-deactivator.php';
-
 // Register activation and deactivation hooks
-register_activation_hook(__FILE__, ['Test_Plugin_Activator', 'activate']);
-register_deactivation_hook(__FILE__, ['Test_Plugin_Deactivator', 'deactivate']);
+register_activation_hook(__FILE__, [Test_Plugin_Activator::class, 'activate']);
+register_deactivation_hook(__FILE__, [Test_Plugin_Deactivator::class, 'deactivate']); 
